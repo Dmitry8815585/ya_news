@@ -1,6 +1,9 @@
 import pytest
 
+from django.conf import settings
+
 from news.models import Comment, News
+from datetime import datetime, timedelta
 
 
 @pytest.fixture
@@ -42,3 +45,53 @@ def comment(author, news):
         news_id=news.id
     )
     return comment
+
+
+@pytest.fixture
+def news_list(author):
+    news_list = [
+        News(title=f'Новость {index}', text='Просто текст.')
+        for index in range(settings.NEWS_COUNT_ON_HOME_PAGE + 1)
+    ]
+    News.objects.bulk_create(news_list)
+    return news_list
+
+
+@pytest.fixture
+def news_sorted_by_date(author):
+    today = datetime.today()
+    news_list = [
+        News(
+            title=f'Новость {index}',
+            text='Просто текст.',
+            date=today - timedelta(days=index)
+            )
+        for index in range(settings.NEWS_COUNT_ON_HOME_PAGE + 1)
+    ]
+    News.objects.bulk_create(news_list)
+    return news_list
+
+
+@pytest.fixture
+def comment_sorted_by_date(author, news):
+    today = datetime.today()
+    comment_sorted_by_date = [
+        Comment(
+            text='Текст комметария',
+            author_id=author.id,
+            news_id=news.id,
+            created=today - timedelta(days=index)
+            )
+        for index in range(3)
+    ]
+    Comment.objects.bulk_create(comment_sorted_by_date)
+    return comment_sorted_by_date
+
+
+@pytest.fixture
+def form_data(author, news):
+    return {
+        'text': 'Новый текст',
+        'author_id': author.id,
+        'news_id': news.id
+    }
