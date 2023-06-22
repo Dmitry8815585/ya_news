@@ -1,9 +1,9 @@
-import pytest
+from datetime import datetime, timedelta
 
+import pytest
 from django.conf import settings
 
 from news.models import Comment, News
-from datetime import datetime, timedelta
 
 
 @pytest.fixture

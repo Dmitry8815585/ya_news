@@ -1,10 +1,6 @@
-# from http import HTTPStatus
-
-from django.urls import reverse
 import pytest
 from django.conf import settings
-
-# from pytest_django.asserts import assertRedirects
+from django.urls import reverse
 
 
 @pytest.mark.parametrize("client_type", ['client', 'author_client'])
@@ -39,10 +35,10 @@ def test_news_order(client, news_sorted_by_date):
     assert all_dates == sorted_dates
 
 
-'''def test_comment_order(client, news, comment_sorted_by_date):
+def test_comment_order(client, news, comment_sorted_by_date):
     url = reverse('news:detail', kwargs={'pk': news.pk})
     response = client.get(url)
-    object_list = response.context['news.comment_set']
+    object_list = response.context['news_list']
     all_dates = [comment.created for comment in object_list]
     sorted_dates = sorted(all_dates, reverse=False)
-    assert all_dates == sorted_dates'''
+    assert all_dates == sorted_dates
