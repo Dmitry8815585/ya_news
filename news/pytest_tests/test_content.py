@@ -38,7 +38,8 @@ def test_news_order(client, news_sorted_by_date):
 def test_comment_order(client, news, comment_sorted_by_date):
     url = reverse('news:detail', kwargs={'pk': news.pk})
     response = client.get(url)
-    object_list = response.context['news_list']
-    all_dates = [comment.created for comment in object_list]
-    sorted_dates = sorted(all_dates, reverse=False)
-    assert all_dates == sorted_dates
+    assert 'news' in response.context
+    comments = response.context['news'].comment_set.all()
+    all_dates = [comment.created for comment in comments]
+    sorted_comments = sorted(all_dates)
+    assert all_dates == sorted_comments
